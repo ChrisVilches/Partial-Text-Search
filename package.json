@@ -2,13 +2,13 @@
   "name": "partial-text-search",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/PartialTextSearch.js",
   "scripts": {
     "test": "mocha --recursive --reporter progress",
     "format": "standard --fix"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Chris Vilches",
+  "license": "MIT",
   "dependencies": {
     "ramda": "^0.28.0"
   },
