@@ -4,14 +4,13 @@ const { expect } = require('chai')
 const { describe, it } = require('mocha')
 const { randString } = require('./helpers')
 
+const stringCmp = (a, b) => a === b ? 0 : (a < b ? -1 : 1)
+
 const expectSuffixOrderIsCorrect = suffixArray => {
   const { string, array } = suffixArray
 
-  const diff = (a, b) => {
-    if (string.substr(a) === string.substr(b)) return 0
-    if (string.substr(a) < string.substr(b)) return -1
-    return 1
-  }
+  const diff = (a, b) => stringCmp(string.substr(a), string.substr(b))
+
   const sortedArray = R.sort(diff, array)
 
   expect(array).to.eql(sortedArray)
