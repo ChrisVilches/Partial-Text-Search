@@ -24,20 +24,39 @@ const findDocInRanges = (docRanges, idxInFullString, queryString) => {
   throw new Error('solution should exist')
 }
 
-const docSetFromRange = R.curry((suffixArray, docRanges, range, queryString) => {
-  const fastSet = new Set()
+const docSetFromRange = R.curry((suffixArray, docRanges, range, queryString, limit) => {
+  const result = new Set()
 
-  if (range.from == null || range.to == null) return fastSet
+  if (range.from == null || range.to == null) return result
+
+  for (let i = range.from; i <= range.to; i++) {
+    if (R.is(Number, limit) && result.size === limit) break
+
+    const docId = findDocInRanges(docRanges, suffixArray.array[i], queryString)
+
+    if (docId != null) {
+      result.add(docId)
+    }
+  }
+
+  return result
+})
+
+const docRankMapFromRange = R.curry((suffixArray, docRanges, range, queryString) => {
+  const result = {}
+
+  if (range.from == null || range.to == null) return result
 
   for (let i = range.from; i <= range.to; i++) {
     const docId = findDocInRanges(docRanges, suffixArray.array[i], queryString)
 
     if (docId != null) {
-      fastSet.add(docId)
+      result[docId] = result[docId] || 0
+      result[docId]++
     }
   }
 
-  return fastSet
+  return result
 })
 
 const getDocRanges = R.curry((docList, docToString) => {
@@ -53,17 +72,13 @@ const getDocRanges = R.curry((docList, docToString) => {
     docRanges.push({ from, to })
   }
 
-  return {
-    docRanges,
-    stringToIndex
-  }
+  return { docRanges, stringToIndex }
 })
 
 class PartialTextSearch {
   constructor (docList, docToString) {
     let doc2str
 
-    // TODO: Test conversion
     if (R.is(Array, docToString)) {
       doc2str = concatValuesAtKeys('|', docToString)
     } else if (R.is(Function, docToString)) {
@@ -78,9 +93,16 @@ class PartialTextSearch {
     this.sa = new SuffixArray(stringToIndex)
   }
 
-  search (query) {
+  search (query, opts = {}) {
+    if (R.isEmpty(query)) return new Set()
     const range = this.sa.suffixMatchRange(query)
-    return docSetFromRange(this.sa, this.docRanges, range, query)
+    return docSetFromRange(this.sa, this.docRanges, range, query, opts.limit)
+  }
+
+  searchRanked (query) {
+    if (R.isEmpty(query)) return {}
+    const range = this.sa.suffixMatchRange(query)
+    return docRankMapFromRange(this.sa, this.docRanges, range, query)
   }
 }
 

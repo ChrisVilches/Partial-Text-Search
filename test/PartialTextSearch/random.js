@@ -2,7 +2,7 @@ const R = require('ramda')
 const { PartialTextSearch } = require('../../src/PartialTextSearch')
 const { expect } = require('chai')
 const { describe, it } = require('mocha')
-const { createDocList, defaultRandString, numberSetToString, takeSomeRandomItems, getDocsNaive } = require('../helpers')
+const { createDocList, defaultRandString, numberSetToString, takeSomeRandomItems, getDocsNaive, getDocsRankMapNaive } = require('../helpers')
 
 const createTestCase = (docKeys, docStringLength, docN, queryN, queryLength) => {
   const docList = createDocList(docKeys, docStringLength, docN)
@@ -13,13 +13,19 @@ const createTestCase = (docKeys, docStringLength, docN, queryN, queryLength) => 
     for (let i = 0; i < queryN; i++) {
       const query = defaultRandString(queryLength)
       const naiveSet = getDocsNaive(docList, keysToIndex, query)
+      const naiveRankMap = getDocsRankMapNaive(docList, keysToIndex, query)
 
       it(`Find query '${query}' and return ${numberSetToString(naiveSet)}`, done => {
         const fastSet = partialTextSearch.search(query)
+        const fastRankMap = partialTextSearch.searchRanked(query)
 
         expect(R.is(Set, fastSet)).to.eq(true)
         expect(R.is(Set, naiveSet)).to.eq(true)
         expect(fastSet).to.eql(naiveSet)
+
+        expect(R.is(Object, naiveRankMap)).to.eq(true)
+        expect(R.is(Object, fastRankMap)).to.eq(true)
+        expect(fastRankMap).to.eql(naiveRankMap)
 
         done()
       })

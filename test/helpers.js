@@ -55,11 +55,50 @@ const getDocsNaive = R.curry((docList, keys, queryString) => {
   return result
 })
 
+function occurrences (string, subString, allowOverlapping) {
+  string += ''
+  subString += ''
+  if (subString.length <= 0) return (string.length + 1)
+
+  let n = 0
+  let pos = 0
+  const step = allowOverlapping ? 1 : subString.length
+
+  while (true) {
+    pos = string.indexOf(subString, pos)
+    if (pos >= 0) {
+      n++
+      pos += step
+    } else break
+  }
+  return n
+}
+
+const getDocsRankMapNaive = R.curry((docList, keys, queryString) => {
+  const result = {}
+
+  if (R.isEmpty(queryString)) return result
+
+  for (let i = 0; i < docList.length; i++) {
+    keys.forEach(k => {
+      const count = occurrences(docList[i][k], queryString, true)
+
+      if (count > 0) {
+        result[i] = result[i] || 0
+        result[i] += count
+      }
+    })
+  }
+
+  return result
+})
+
 module.exports = {
   randString,
   defaultRandString,
   createDocList,
   numberSetToString,
   takeSomeRandomItems,
-  getDocsNaive
+  getDocsNaive,
+  getDocsRankMapNaive
 }
