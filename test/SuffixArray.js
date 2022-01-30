@@ -4,12 +4,12 @@ const { expect } = require('chai')
 const { describe, it } = require('mocha')
 const { randString } = require('./helpers')
 
-const stringCmp = (a, b) => a === b ? 0 : (a < b ? -1 : 1)
+const spaceship = (a, b) => a === b ? 0 : (a < b ? -1 : 1)
 
 const expectSuffixOrderIsCorrect = suffixArray => {
   const { string, array } = suffixArray
 
-  const diff = (a, b) => stringCmp(string.substr(a), string.substr(b))
+  const diff = (a, b) => spaceship(string.substr(a), string.substr(b))
 
   const sortedArray = R.sort(diff, array)
 
@@ -68,6 +68,7 @@ describe('SuffixArray', () => {
 
     it('gets null range when it does not exist', () => {
       expect(simpleSA.suffixMatchRange('sa')).to.eql(R.zipObj(['from', 'to'], [null, null]))
+      expect(simpleSA.suffixMatchRange('f')).to.eql(R.zipObj(['from', 'to'], [null, null]))
       expect(simpleSA.suffixMatchRange('eaacbbccdeabbcdea')).to.eql(R.zipObj(['from', 'to'], [null, null]))
     })
   })
@@ -118,6 +119,7 @@ describe('SuffixArray', () => {
 
     it('compares empty string correctly', () => {
       expect('aaaa' < '').to.eq(false)
+      expect(R.empty('') < '').to.eq(false)
       expect(simpleSA.lt(0, '')).to.eq(false)
       expect(simpleSA.lt(1, '')).to.eq(false)
       expect(simpleSA.lt(2, '')).to.eq(false)
@@ -138,6 +140,8 @@ describe('SuffixArray', () => {
       expectSuffixOrderIsCorrect(new SuffixArray(randString('((`{}*{`=::]@[;:l-/__\\@O_~))(&$;', 1000)))
       expectSuffixOrderIsCorrect(new SuffixArray(randString('((`{}*{`=::]@[;:labcdefghijklmnopqrstuvwxyz-/__\\@O_~))(&$;', 1000)))
       expectSuffixOrderIsCorrect(new SuffixArray(randString('$', 1000)))
+      expectSuffixOrderIsCorrect(new SuffixArray(randString('|', 1000)))
+      expectSuffixOrderIsCorrect(new SuffixArray(randString('|$', 1000)))
     })
 
     it('has correct order even when Japanese is used', () => {
