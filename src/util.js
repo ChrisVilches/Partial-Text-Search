@@ -1,6 +1,6 @@
 const R = require('ramda')
 
-const concatKeysAt = R.curry((keys, separator, obj) => {
+const concatValuesAtKeys = R.curry((separator, keys, obj) => {
   let result = ''
 
   for (let i = 0; i < keys.length; i++) {
@@ -18,7 +18,7 @@ const concatAllStrings = R.curry((separator, obj) => {
   let result = ''
 
   Object.entries(obj).forEach(([_, val]) => {
-    if (stringOrNumber(val)) {
+    if (stringOrNumber(val) && !R.isEmpty(val)) {
       if (result.length > 0) result += separator
       result += val
     }
@@ -29,5 +29,5 @@ const concatAllStrings = R.curry((separator, obj) => {
 
 module.exports = {
   concatAllStrings,
-  concatKeysAt
+  concatValuesAtKeys
 }

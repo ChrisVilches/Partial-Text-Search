@@ -42,6 +42,8 @@ const takeSomeRandomItems = array => {
 const getDocsNaive = R.curry((docList, keys, queryString) => {
   const result = new Set()
 
+  if (R.isEmpty(queryString)) return result
+
   for (let i = 0; i < docList.length; i++) {
     keys.forEach(k => {
       if (R.includes(queryString, docList[i][k])) {
@@ -54,6 +56,7 @@ const getDocsNaive = R.curry((docList, keys, queryString) => {
 })
 
 module.exports = {
+  randString,
   defaultRandString,
   createDocList,
   numberSetToString,

@@ -1,6 +1,6 @@
 const R = require('ramda')
 const { SuffixArray } = require('./SuffixArray')
-const { concatKeysAt, concatAllStrings } = require('./util')
+const { concatValuesAtKeys, concatAllStrings } = require('./util')
 
 const findDocInRanges = (docRanges, idxInFullString, queryString) => {
   let low = 0
@@ -65,11 +65,11 @@ class PartialTextSearch {
 
     // TODO: Test conversion
     if (R.is(Array, docToString)) {
-      doc2str = concatKeysAt(docToString, '|')
+      doc2str = concatValuesAtKeys('|', docToString)
     } else if (R.is(Function, docToString)) {
       doc2str = docToString
     } else {
-      doc2str = concatAllStrings
+      doc2str = concatAllStrings('|')
     }
 
     const { stringToIndex, docRanges } = getDocRanges(docList, doc2str)
