@@ -14,16 +14,19 @@ function buildSuffixArray (s) {
     su[i] = new Suffix(i, s[i].charCodeAt(0), 0)
   }
 
-  for (let i = 0; i < n; i++) { su[i].next = (i + 1 < n ? su[i + 1].rank : -1) }
+  for (let i = 0; i < n; i++) {
+    su[i].next = (i + 1 < n ? su[i + 1].rank : -1)
+  }
 
-  su.sort(function (a, b) {
-    if (a.rank !== b.rank) { return a.rank - b.rank } else { return a.next - b.next }
-  })
+  const cmp = (a, b) => a.rank !== b.rank ? a.rank - b.rank : a.next - b.next
+
+  su.sort(cmp)
 
   const ind = new Array(n)
 
   for (let length = 4; length < 2 * n; length <<= 1) {
-    let rank = 0; let prev = su[0].rank
+    let rank = 0
+    let prev = su[0].rank
     su[0].rank = rank
     ind[su[0].index] = 0
     for (let i = 1; i < n; i++) {
@@ -40,14 +43,10 @@ function buildSuffixArray (s) {
 
     for (let i = 0; i < n; i++) {
       const nextP = su[i].index + length / 2
-      su[i].next = nextP < n
-        ? su[ind[nextP]].rank
-        : -1
+      su[i].next = nextP < n ? su[ind[nextP]].rank : -1
     }
 
-    su.sort(function (a, b) {
-      if (a.rank !== b.rank) { return a.rank - b.rank } else { return a.next - b.next }
-    })
+    su.sort(cmp)
   }
 
   const suf = new Array(n)
