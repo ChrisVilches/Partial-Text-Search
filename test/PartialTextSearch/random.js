@@ -34,11 +34,13 @@ const createTestCase = (docKeys, docStringLength, docN, queryN, queryLength) => 
 }
 
 // createTestCase = (docKeys, docStringLength, docN, queryN, queryLength)
-// TODO: Cases when some documents are empty
 createTestCase(['text', 'conclusion', 'about'], 100, 300, 20, 3)
 createTestCase(['name', 'surname', 'bio', 'hobby'], 500, 300, 20, 3)
 createTestCase(['a', 'b', 'c', 'd'], 500, 300, 20, 5)
 createTestCase(['ww', 'xx', 'yy', 'zz'], 500, 300, 20, 10)
+createTestCase(['a', 'b', 'c', 'd'], 100, 1000, 100, 1)
+createTestCase(['a', 'b', 'c', 'd'], 100, 1000, 100, 2)
+createTestCase(['a', 'b', 'c', 'd'], 100, 1000, 100, 3)
 createTestCase(['a', 'b', 'c', 'd'], 100, 1000, 100, 4)
 createTestCase(['a', 'b', 'c', 'd'], 10, 10, 200, 2)
 createTestCase(['a', 'b', 'c', 'd'], 0, 100, 100, 0)
@@ -56,7 +58,7 @@ createTestCase(['a', 'b', 'c', 'd'], 2, 100, 10, 10000)
 describe('PartialTextSearch', () => {
   for (let i = 1; i < 10; i++) {
     for (let j = 1; j < 5; j++) {
-      createTestCase(['a', 'b', 'c', 'd'], 50, i, 50, j)
+      createTestCase(['a', 'b', 'c', 'd'], 50, i, 200, j)
     }
   }
 })

@@ -4,11 +4,11 @@ const _ = require('lodash')
 const alphabet = 'abbacbacbasd$jaひらがな かたかな 感じ　漢字　記号sdsad%kjnqwkeisa!)"(sadksdnk'
 
 const randString = R.curry((alphabet, length) => {
-  let result = ''
+  const result = new Array(length)
   for (let i = 0; i < length; i++) {
-    result += _.sample(alphabet)
+    result[i] = _.sample(alphabet)
   }
-  return result
+  return result.join('')
 })
 
 const defaultRandString = randString(alphabet)
@@ -22,8 +22,8 @@ const createDoc = R.curry((keys, stringLength) => {
 })
 
 const createDocList = R.curry((docKeys, docStringLength, docN) => {
-  const result = []
-  for (let i = 0; i < docN; i++) result.push(createDoc(docKeys, docStringLength))
+  const result = new Array(docN)
+  for (let i = 0; i < docN; i++) result[i] = createDoc(docKeys, docStringLength)
   return result
 })
 
@@ -55,7 +55,7 @@ const getDocsNaive = R.curry((docList, keys, queryString) => {
   return result
 })
 
-function occurrences (string, subString, allowOverlapping) {
+const occurrences = (string, subString, allowOverlapping = true) => {
   string += ''
   subString += ''
   if (subString.length <= 0) return (string.length + 1)
@@ -81,7 +81,7 @@ const getDocsRankMapNaive = R.curry((docList, keys, queryString) => {
 
   for (let i = 0; i < docList.length; i++) {
     keys.forEach(k => {
-      const count = occurrences(docList[i][k], queryString, true)
+      const count = occurrences(docList[i][k], queryString)
 
       if (count > 0) {
         result[i] = result[i] || 0

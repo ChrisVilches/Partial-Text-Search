@@ -2,19 +2,25 @@ const R = require('ramda')
 const { PartialTextSearch } = require('../../src/PartialTextSearch')
 const { expect } = require('chai')
 const { describe, it } = require('mocha')
+const { createDocList } = require('../helpers')
 
 describe('PartialTextSearch', () => {
   describe('.search', () => {
+    it('returns empty set when the query string is empty', () => {
+      const partialTextSearch = new PartialTextSearch(createDocList(['a', 'b', 'c'], 100, 100))
+      expect(partialTextSearch.search('').size).to.eq(0)
+    })
+
     it('limits the results when setting the flag', () => {
       const partialTextSearch = new PartialTextSearch([{ text: 'aaa' }, { text: 'abaa' }, { text: 'bbba' }])
 
       expect(partialTextSearch.search('aaa').size).to.eq(1)
+      expect(partialTextSearch.search('aa').size).to.eq(2)
+      expect(partialTextSearch.search('a').size).to.eq(3)
       expect(partialTextSearch.search('aaa', { limit: 10 }).size).to.eq(1)
       expect(partialTextSearch.search('aaa', { limit: 0 }).size).to.eq(0)
-      expect(partialTextSearch.search('aa').size).to.eq(2)
       expect(partialTextSearch.search('aa', { limit: 2 }).size).to.eq(2)
       expect(partialTextSearch.search('aa', { limit: 1 }).size).to.eq(1)
-      expect(partialTextSearch.search('a').size).to.eq(3)
       expect(partialTextSearch.search('a', { limit: 4 }).size).to.eq(3)
       expect(partialTextSearch.search('a', { limit: 3 }).size).to.eq(3)
       expect(partialTextSearch.search('a', { limit: 2 }).size).to.eq(2)

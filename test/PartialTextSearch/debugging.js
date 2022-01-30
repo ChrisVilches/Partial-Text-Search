@@ -28,10 +28,11 @@ describe('PartialTextSearch', () => {
     })
 
     it('does not match a string that goes from one document to another (in the full concatenated string)', () => {
-      const queryString = 'なasな'
-      const naiveSet = getDocsNaive(docList, ['text', 'about'], queryString)
-      const fastSet = partialTextSearch.search(queryString)
-      expect(fastSet).to.eql(naiveSet)
+      expect(partialTextSearch.search('なasな')).to.eql(new Set())
+      expect(partialTextSearch.search('じj')).to.eql(new Set())
+      expect(partialTextSearch.search('jら')).to.eql(new Set())
+      expect(partialTextSearch.search('iikk')).to.eql(new Set())
+      expect(partialTextSearch.search('bじ')).to.eql(new Set())
     })
   })
 

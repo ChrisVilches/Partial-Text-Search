@@ -1,5 +1,7 @@
 const R = require('ramda')
 
+// TODO: Must benchmark these ways to build strings. Find the fastest one for each strategy (keys/auto).
+
 const concatValuesAtKeys = R.curry((separator, keys, obj) => {
   let result = ''
 
@@ -13,7 +15,6 @@ const concatValuesAtKeys = R.curry((separator, keys, obj) => {
 
 const stringOrNumber = R.either(R.is(String), R.is(Number))
 
-// TODO: Test
 const concatAllStrings = R.curry((separator, obj) => {
   let result = ''
 
