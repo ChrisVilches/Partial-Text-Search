@@ -75,6 +75,7 @@ const getDocRanges = R.curry((docList, docToString) => {
   return { docRanges, stringToIndex }
 })
 
+// TODO: Separator configuration
 class PartialTextSearch {
   constructor (docList, docToString) {
     let doc2str
