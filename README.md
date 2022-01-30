@@ -26,5 +26,5 @@ Benchmarks:
 
 ```
 node benchmarks/benchmark.js
-node benchmarks/benchmark2.js
+node benchmarks/benchmark2.js 100000
 ```
