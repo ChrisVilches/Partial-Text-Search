@@ -30,7 +30,7 @@ describe('PartialTextSearch', () => {
 
     it('supports case insensitive search using a workaround (query must also be lowercased manually)', () => {
       const textToLowerCase = R.compose(R.toLower, R.prop('text'))
-      const partialTextSearch = new PartialTextSearch([{ text: 'cHRiS' }, { text: 'vIlCh' }, { text: 'heLLo' }], textToLowerCase)
+      const partialTextSearch = new PartialTextSearch([{ text: 'cHRiS' }, { text: 'vIlCh' }, { text: 'heLLo' }], { docToString: textToLowerCase })
 
       expect(partialTextSearch.search('h').size).to.eq(3)
       expect(partialTextSearch.search('H').size).to.eq(0)

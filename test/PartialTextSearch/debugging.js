@@ -18,7 +18,7 @@ describe('PartialTextSearch', () => {
       { text: 'じ記b字$ankがj', about: 'ら字感$記じe"aa' }
     ]
 
-    const partialTextSearch = new PartialTextSearch(docList, ['text', 'about'])
+    const partialTextSearch = new PartialTextSearch(docList, { docToString: ['text', 'about'] })
 
     it('gets documents correctly', () => {
       const queryString = 'aa'
@@ -50,7 +50,7 @@ describe('PartialTextSearch', () => {
       { text: '$たsja感n)!s' }
     ]
 
-    const partialTextSearch = new PartialTextSearch(docList, ['text'])
+    const partialTextSearch = new PartialTextSearch(docList, { docToString: ['text'] })
 
     it('gets documents correctly', () => {
       const queryString = 's '
@@ -74,7 +74,7 @@ describe('PartialTextSearch', () => {
       { a: 'なea らaksた　', b: 'eが)ひqa%" s', c: 'naaades記sa', d: 'bbskdがかna号' }
     ]
 
-    const partialTextSearch = new PartialTextSearch(docList, ['a', 'b', 'c', 'd'])
+    const partialTextSearch = new PartialTextSearch(docList, { docToString: ['a', 'b', 'c', 'd'] })
 
     it('gets documents correctly', () => {
       const queryString = '号d'

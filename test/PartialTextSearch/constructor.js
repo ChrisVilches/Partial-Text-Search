@@ -12,14 +12,14 @@ describe('PartialTextSearch', () => {
     ]
 
     describe('when passing keys array (doc to string)', () => {
-      const partialTextSearch = new PartialTextSearch(docList, ['name', 'age'])
+      const partialTextSearch = new PartialTextSearch(docList, { docToString: ['name', 'age'] })
       it('uses given keys to concatenate all strings', () => {
         expect(partialTextSearch.sa.string).to.eq('john|20chris|21nick|22')
       })
     })
 
     describe('when passing a function (doc to string)', () => {
-      const partialTextSearch = new PartialTextSearch(docList, doc => (doc.age * 2) + R.reverse(doc.name) + doc.surname)
+      const partialTextSearch = new PartialTextSearch(docList, { docToString: doc => (doc.age * 2) + R.reverse(doc.name) + doc.surname })
       it('converts each document using the given function, and concatenates all strings', () => {
         expect(partialTextSearch.sa.string).to.eq('40nhojyamamoto42sirhcvilch44kcinmariangel')
       })
@@ -37,6 +37,17 @@ describe('PartialTextSearch', () => {
       it('has empty data', () => {
         expect(partialTextSearch.sa.string).to.eq('')
         expect(partialTextSearch.sa.length).to.eq(0)
+      })
+    })
+
+    describe('separator configuration', () => {
+      it('allows to configure the separator', () => {
+        const docList = [{ a: 'a', b: 'b' }, { a: 'aa', b: 'bb' }]
+
+        expect((new PartialTextSearch(docList, { separator: '<>' })).sa.string).to.eq('a<>baa<>bb')
+        expect((new PartialTextSearch(docList, { separator: '' })).sa.string).to.eq('abaabb')
+        expect((new PartialTextSearch(docList, {})).sa.string).to.eq('a|baa|bb')
+        expect((new PartialTextSearch(docList, { separator: '^' })).sa.string).to.eq('a^baa^bb')
       })
     })
   })

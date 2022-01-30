@@ -1,59 +1,39 @@
-class Suffix {
-  constructor (ind, r, nr) {
-    this.index = ind
-    this.rank = r
-    this.next = nr
-  }
-}
+const { spaceship } = require('./util')
 
 function buildSuffixArray (s) {
-  const n = s.length
-  const su = new Array(n)
+  const S = s.length
+  const sa = new Array(S)
+  const ranks = new Array(S)
+  const tmp = new Array(S)
+  let gap
 
-  for (let i = 0; i < n; i++) {
-    su[i] = new Suffix(i, s[i].charCodeAt(0), 0)
+  for (let i = 0; i < S; i++) {
+    sa[i] = i
+    tmp[i] = 0
+    ranks[i] = s[i]
   }
 
-  for (let i = 0; i < n; i++) {
-    su[i].next = (i + 1 < n ? su[i + 1].rank : -1)
+  const cmp = (x, y) => {
+    if (ranks[x] !== ranks[y]) return spaceship(ranks[x], ranks[y])
+    x += gap
+    y += gap
+
+    return x < S && y < S ? spaceship(ranks[x], ranks[y]) : spaceship(y, x)
   }
 
-  const cmp = (a, b) => a.rank !== b.rank ? a.rank - b.rank : a.next - b.next
+  for (gap = 1; tmp[S - 1] < S - 1; gap <<= 1) {
+    sa.sort(cmp)
 
-  su.sort(cmp)
-
-  const ind = new Array(n)
-
-  for (let length = 4; length < 2 * n; length <<= 1) {
-    let rank = 0
-    let prev = su[0].rank
-    su[0].rank = rank
-    ind[su[0].index] = 0
-    for (let i = 1; i < n; i++) {
-      if (su[i].rank === prev &&
-        su[i].next === su[i - 1].next) {
-        prev = su[i].rank
-        su[i].rank = rank
-      } else {
-        prev = su[i].rank
-        su[i].rank = ++rank
-      }
-      ind[su[i].index] = i
+    for (let i = 1; i < S; i++) {
+      tmp[i] = tmp[i - 1] + (cmp(sa[i - 1], sa[i]) === -1 ? 1 : 0)
     }
 
-    for (let i = 0; i < n; i++) {
-      const nextP = su[i].index + length / 2
-      su[i].next = nextP < n ? su[ind[nextP]].rank : -1
+    for (let i = 0; i < S; i++) {
+      ranks[sa[i]] = tmp[i]
     }
-
-    su.sort(cmp)
   }
 
-  const suf = new Array(n)
-
-  for (let i = 0; i < n; i++) { suf[i] = su[i].index }
-
-  return suf
+  return sa
 }
 
 const binarySearch = (first, sa, x) => {

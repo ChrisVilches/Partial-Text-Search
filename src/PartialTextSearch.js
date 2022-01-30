@@ -75,23 +75,36 @@ const getDocRanges = R.curry((docList, docToString) => {
   return { docRanges, stringToIndex }
 })
 
-// TODO: Separator configuration
+const DEFAULT_CONSTRUCTOR_OPTS = {
+  docToString: null,
+  beforeCreateSuffixArray: () => {},
+  afterCreateSuffixArray: () => {},
+  separator: '|'
+}
+
 class PartialTextSearch {
-  constructor (docList, docToString) {
+  constructor (docList, opts = {}) {
+    opts = R.mergeRight(DEFAULT_CONSTRUCTOR_OPTS, opts)
+    const { separator, docToString } = opts
+
     let doc2str
 
     if (R.is(Array, docToString)) {
-      doc2str = concatValuesAtKeys('|', docToString)
+      doc2str = concatValuesAtKeys(separator, docToString)
     } else if (R.is(Function, docToString)) {
       doc2str = docToString
     } else {
-      doc2str = concatAllStrings('|')
+      doc2str = concatAllStrings(separator)
     }
 
     const { stringToIndex, docRanges } = getDocRanges(docList, doc2str)
 
     this.docRanges = docRanges
+
+    opts.beforeCreateSuffixArray(stringToIndex)
+    const start = new Date()
     this.sa = new SuffixArray(stringToIndex)
+    opts.afterCreateSuffixArray(start, new Date())
   }
 
   search (query, opts = {}) {

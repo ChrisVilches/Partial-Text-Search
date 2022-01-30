@@ -28,7 +28,10 @@ const concatAllStrings = R.curry((separator, obj) => {
   return result
 })
 
+const spaceship = (a, b) => a === b ? 0 : (a < b ? -1 : 1)
+
 module.exports = {
   concatAllStrings,
-  concatValuesAtKeys
+  concatValuesAtKeys,
+  spaceship
 }

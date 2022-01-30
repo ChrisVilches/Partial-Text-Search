@@ -3,8 +3,7 @@ const { SuffixArray } = require('../src/SuffixArray')
 const { expect } = require('chai')
 const { describe, it } = require('mocha')
 const { randString } = require('./helpers')
-
-const spaceship = (a, b) => a === b ? 0 : (a < b ? -1 : 1)
+const { spaceship } = require('../src/util')
 
 const expectSuffixOrderIsCorrect = suffixArray => {
   const { string, array } = suffixArray

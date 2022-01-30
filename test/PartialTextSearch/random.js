@@ -7,7 +7,7 @@ const { createDocList, defaultRandString, numberSetToString, takeSomeRandomItems
 const createTestCase = (docKeys, docStringLength, docN, queryN, queryLength) => {
   const docList = createDocList(docKeys, docStringLength, docN)
   const keysToIndex = takeSomeRandomItems(docKeys)
-  const partialTextSearch = new PartialTextSearch(docList, keysToIndex)
+  const partialTextSearch = new PartialTextSearch(docList, { docToString: keysToIndex })
 
   describe(`with ${docN} documents with structure { ${docKeys.join(', ')} }. Using keys { ${keysToIndex.join(', ')} } for indexation. Query length: ${queryLength}.`, () => {
     for (let i = 0; i < queryN; i++) {
