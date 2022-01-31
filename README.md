@@ -68,13 +68,13 @@ Before indexing the document list, it's necessary to convert each document to a 
 It's possible to configure a different separator for combining fields into a single string:
 
 ```javascript
-partialTextSearch = new PartialTextSearch(docs, { separator: '//' })
+partialTextSearch = new PartialTextSearch(docs, { separator: '/' })
 ```
 
 You can also combine this option with the `docToString` option:
 
 ```javascript
-partialTextSearch = new PartialTextSearch(docs, { separator: '//', docToString: ['summary', 'another_key'] })
+partialTextSearch = new PartialTextSearch(docs, { separator: '/', docToString: ['summary', 'another_key'] })
 ```
 
 What if the query patterns and/or the document strings contain the separator being used? The separator is only used as a way to improve accuracy, but it's not part of the actual text, therefore it shouldn't be used for matching any pattern. One way to deal with this problem is to remove the separator from both the document's text and from each query (before calling the search methods). This way, the separator character will only ever appear as a separator, and in no other context.
