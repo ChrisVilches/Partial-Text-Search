@@ -40,6 +40,25 @@ describe('PartialTextSearch', () => {
       })
     })
 
+    describe('when document list has incorrect data type', () => {
+      it('throws error', () => {
+        const err = 'Document list (constructor argument) must be an array of objects'
+
+        expect(() => new PartialTextSearch(false)).to.throw(err)
+        expect(() => new PartialTextSearch({})).to.throw(err)
+        expect(() => new PartialTextSearch({ text: 'abc' })).to.throw(err)
+        expect(() => new PartialTextSearch(123)).to.throw(err)
+        expect(() => new PartialTextSearch(() => {})).to.throw(err)
+
+        expect(() => new PartialTextSearch([() => {}, () => {}])).to.throw(err)
+        expect(() => new PartialTextSearch([1, 2])).to.throw(err)
+        expect(() => new PartialTextSearch([{ text: 'abc' }, 2])).to.throw(err)
+        expect(() => new PartialTextSearch([{ text: 'abc' }, 2, { text: 'xyz' }])).to.throw(err)
+        expect(() => new PartialTextSearch([false, true])).to.throw(err)
+        expect(() => new PartialTextSearch(['aa', 'bb'])).to.throw(err)
+      })
+    })
+
     describe('separator configuration', () => {
       it('allows to configure the separator', () => {
         const docList = [{ a: 'a', b: 'b' }, { a: 'aa', b: 'bb' }]

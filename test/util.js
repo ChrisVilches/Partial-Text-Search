@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const { describe, it } = require('mocha')
-const { concatAllStrings, concatValuesAtKeys } = require('../src/util')
+const { concatAllStrings, concatValuesAtKeys, isArrayOfObjects } = require('../src/util')
 
 describe('concatAllStrings', () => {
   it('concatenates strings correctly', () => {
@@ -41,5 +41,31 @@ describe('concatValuesAtKeys', () => {
     expect(concatValuesAtKeys('|', ['name', 'surname'], { name: 'chris', age: 10, surname: 'vilch' })).to.eq('chris|vilch')
     expect(concatValuesAtKeys('', ['name', 'surname'], { name: 'chris', age: 10, surname: 'vilch' })).to.eq('chrisvilch')
     expect(concatValuesAtKeys('-', ['name', 'surname'], { name: 'chris', age: 10, surname: 'vilch' })).to.eq('chris-vilch')
+  })
+})
+
+describe('isArrayOfObjects', () => {
+  it('verifies the type correctly (correct data type)', () => {
+    expect(isArrayOfObjects([])).to.eq(true)
+    expect(isArrayOfObjects([{}])).to.eq(true)
+    expect(isArrayOfObjects([{}, {}])).to.eq(true)
+    expect(isArrayOfObjects([{ a: 1 }, { b: 4 }])).to.eq(true)
+    expect(isArrayOfObjects([[], []])).to.eq(true)
+  })
+
+  it('verifies the type correctly (incorrect data type)', () => {
+    expect(isArrayOfObjects(1)).to.eq(false)
+    expect(isArrayOfObjects(null)).to.eq(false)
+    expect(isArrayOfObjects({}, {})).to.eq(false)
+    expect(isArrayOfObjects('aaaa')).to.eq(false)
+    expect(isArrayOfObjects('aaaa')).to.eq(false)
+    expect(isArrayOfObjects(false)).to.eq(false)
+    expect(isArrayOfObjects(() => {})).to.eq(false)
+    expect(isArrayOfObjects([() => {}])).to.eq(false)
+    expect(isArrayOfObjects([() => {}, () => {}])).to.eq(false)
+    expect(isArrayOfObjects(['aa', 'bb'])).to.eq(false)
+    expect(isArrayOfObjects([true, false])).to.eq(false)
+    expect(isArrayOfObjects([10, 100])).to.eq(false)
+    expect(isArrayOfObjects([null, null])).to.eq(false)
   })
 })

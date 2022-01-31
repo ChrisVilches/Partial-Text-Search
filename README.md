@@ -2,11 +2,21 @@
 
 ## Install
 
-wip
+```
+npm install partial-text-search
+```
 
 ## Usage
 
-wip
+```javascript
+const PartialTextSearch = require('partial-text-search')
+
+const docList = [{ text: 'abc' }, { text: 'aabbcc' }]
+
+const partialTextSearch = new PartialTextSearch(docList)
+
+partialTextSearch.search('aa')
+```
 
 ## Development
 

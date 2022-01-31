@@ -30,8 +30,13 @@ const concatAllStrings = R.curry((separator, obj) => {
 
 const spaceship = (a, b) => a === b ? 0 : (a < b ? -1 : 1)
 
+const isNonNullObject = x => x != null && typeof x === 'object'
+
+const isArrayOfObjects = R.both(R.is(Array), R.all(isNonNullObject))
+
 module.exports = {
   concatAllStrings,
   concatValuesAtKeys,
-  spaceship
+  spaceship,
+  isArrayOfObjects
 }

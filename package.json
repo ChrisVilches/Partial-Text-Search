@@ -2,11 +2,15 @@
   "name": "partial-text-search",
   "version": "1.0.0",
   "description": "",
-  "main": "src/PartialTextSearch.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha --recursive --reporter progress",
     "format": "standard --fix"
   },
+  "files": [
+    "src/*",
+    "index.js"
+  ],
   "author": "Chris Vilches",
   "license": "MIT",
   "dependencies": {

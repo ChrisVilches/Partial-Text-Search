@@ -1,6 +1,6 @@
 const R = require('ramda')
 const { SuffixArray } = require('./SuffixArray')
-const { concatValuesAtKeys, concatAllStrings } = require('./util')
+const { concatValuesAtKeys, concatAllStrings, isArrayOfObjects } = require('./util')
 
 const findDocInRanges = (docRanges, idxInFullString, queryString) => {
   let low = 0
@@ -84,6 +84,10 @@ const DEFAULT_CONSTRUCTOR_OPTS = {
 
 class PartialTextSearch {
   constructor (docList, opts = {}) {
+    if (!isArrayOfObjects(docList)) {
+      throw new Error('Document list (constructor argument) must be an array of objects')
+    }
+
     opts = R.mergeRight(DEFAULT_CONSTRUCTOR_OPTS, opts)
     const { separator, docToString } = opts
 
