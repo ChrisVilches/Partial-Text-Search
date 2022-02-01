@@ -129,7 +129,7 @@ If you want to use a character different from `|`, you can configure a different
 partialTextSearch = new PartialTextSearch(docs, { separator: '/' })
 ```
 
-What if the query patterns and/or the document strings contain the separator being used? The separator is only used as a way to improve accuracy, but it's not part of the actual text (since it's inserted by the library), therefore it shouldn't be used for pattern matching. One way to deal with this problem is to remove the separator from both the document's text and from each query (before calling the search methods). This way, the separator character will only ever appear as a separator, and in no other context:
+What if the query patterns and/or the document strings contain the separator being used? The separator is only used as a way to improve accuracy, but it's not part of the actual text (since it's inserted by the library), therefore it shouldn't be used for pattern matching. One way to deal with this problem is to remove the separator from both the document's text (at the time of indexing) and from each query (before calling the search methods). This way, the separator character will only ever appear as a separator, and in no other context:
 
 ```javascript
 let myQuery = 'I love the pipe | symbol'
