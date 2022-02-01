@@ -1,6 +1,6 @@
 # Partial Text Search
 
-A Javascript library to find string patterns in a collection of documents. It efficiently finds matches even if the text of each document does not begin with the query pattern.
+A Javascript library that finds string patterns in a collection of documents. It efficiently finds matches even if the text of each document does not begin with the query pattern.
 
 The result of each query is a set containing the document IDs where the query pattern is contained.
 

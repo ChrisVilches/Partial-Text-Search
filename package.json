@@ -1,14 +1,31 @@
 {
   "name": "partial-text-search",
-  "version": "1.0.1",
-  "description": "",
+  "version": "1.0.2",
+  "description": "A Javascript library that finds string patterns in a collection of documents. It efficiently finds matches even if the text of each document does not begin with the query pattern.",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/ChrisVilches/Partial-Text-Search"
   },
-  "url" : "https://github.com/ChrisVilches/Partial-Text-Search/issues",
-  "email" : "contact@chrisvilches.com",
+  "bugs": {
+    "url" : "https://github.com/ChrisVilches/Partial-Text-Search/issues"
+  },
+  "keywords": [
+    "suffix array",
+    "text",
+    "text search",
+    "full text search",
+    "full text",
+    "search",
+    "searching algorithms",
+    "string matching",
+    "substring matching",
+    "binary search",
+    "document collection",
+    "query",
+    "wildcard",
+    "postfix search"
+  ],
   "scripts": {
     "test": "mocha --recursive --reporter progress",
     "format": "standard --fix"
