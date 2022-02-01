@@ -100,7 +100,7 @@ You can fully customize the way a document is indexed by providing a function, f
 
 ```javascript
 // myDocConversion :: Object -> String
-const myDocConversion = doc => (doc.age * 2) + '||' + R.reverse(doc.name) + '||' + doc.surname
+const myDocConversion = doc => (doc.age * 2) + '||' + doc.name + '||' + doc.surname
 
 partialTextSearch = new PartialTextSearch(docs, { docToString: myDocConversion })
 ```
