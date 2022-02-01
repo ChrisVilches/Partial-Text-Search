@@ -137,7 +137,6 @@ const removePipe = x => x.replace(/\|/g, '')
 const myDocConversion = doc => removePipe(doc.name) + '|' + removePipe(doc.surname)
 
 const partialTextSearch = new PartialTextSearch(docs, {
-  separator: '|',
   docToString: myDocConversion
 })
 
