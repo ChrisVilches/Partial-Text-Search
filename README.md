@@ -132,18 +132,25 @@ partialTextSearch = new PartialTextSearch(docs, { separator: '/' })
 What if the query patterns and/or the document strings contain the separator being used? The separator is only used as a way to improve accuracy, but it's not part of the actual text (since it's inserted by the library), therefore it shouldn't be used for pattern matching. One way to deal with this problem is to remove the separator from both the document's text (at the time of indexing) and from each query (before calling the search methods). This way, the separator character will only ever appear as a separator, and in no other context:
 
 ```javascript
-let myQuery = 'I love the pipe | symbol'
+const removePipe = x => x.replace(/\|/g, '')
 
-myQuery = myQuery.replace(/\|/g, '') // Remove all | characters
+const myDocConversion = doc => removePipe(doc.name) + '|' + removePipe(doc.surname)
 
-partialTextSearch.search(myQuery) // Assume documents were indexed using the | separator
+const partialTextSearch = new PartialTextSearch(docs, {
+  separator: '|',
+  docToString: myDocConversion
+})
+
+const myQuery = 'I love the pipe | symbol'
+
+partialTextSearch.search(removePipe(myQuery))
 ```
 
 ### Case insensitive support
 
 Search is case sensitive by design, but there are a few ways to support case insensitive search. The recommended way is to:
 
-1. Convert the strings to index of all documents to lowercase.
+1. At indexing time, convert the strings to lowercase (don't modify the original documents, simply modify the string to index).
 2. Lowercase the query before executing the search.
 
 ```javascript
