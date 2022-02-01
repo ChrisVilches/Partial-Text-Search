@@ -109,7 +109,7 @@ Note that you must manually add a separator between fields in case you need it, 
 
 ### Separator
 
-Before indexing the document list, it's necessary to convert each document to a single string, where some or all fields are concatenated. In order to improve search accuracy, a separator can be added (by default a `|`) so that it's possible to clearly differentiate one document field from another. This avoids matching a substring that only exists because of the concatenation of two fields, but not in any individual field of the document. Take a look at the following example:
+Before indexing the document list, it's necessary to convert each document to a single string, where some or all fields are concatenated. In order to improve search accuracy, a separator can be added (by default a pipe character, or `|`) so that it's possible to clearly differentiate one document field from another. This avoids matching a substring that only exists because of the concatenation of two fields, but not in any individual field of the document. Take a look at the following example:
 
 ```javascript
 const docList = [
