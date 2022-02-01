@@ -6,8 +6,11 @@ const concatValuesAtKeys = R.curry((separator, keys, obj) => {
   let result = ''
 
   for (let i = 0; i < keys.length; i++) {
+    const val = obj[keys[i]]
+
+    if (R.isEmpty(val) || val == null) continue
     if (i !== 0) result += separator
-    result += obj[keys[i]]
+    result += val
   }
 
   return result

@@ -11,10 +11,25 @@ describe('PartialTextSearch', () => {
       { name: 'nick', surname: 'mariangel', age: 22 }
     ]
 
+    const docList2 = [
+      { name: 'a', age: null, city: undefined, surname: 'b' },
+      { name: 'c', age: null, city: undefined, surname: 'd' }
+    ]
+
     describe('when passing keys array (doc to string)', () => {
-      const partialTextSearch = new PartialTextSearch(docList, { docToString: ['name', 'age'] })
       it('uses given keys to concatenate all strings', () => {
+        const partialTextSearch = new PartialTextSearch(docList, { docToString: ['name', 'age'] })
         expect(partialTextSearch.sa.string).to.eq('john|20chris|21nick|22')
+      })
+
+      it('ignores keys that do not exist', () => {
+        const partialTextSearch = new PartialTextSearch(docList, { docToString: ['name', 'hello', 'age'] })
+        expect(partialTextSearch.sa.string).to.eq('john|20chris|21nick|22')
+      })
+
+      it('ignores keys that have null or undefined values', () => {
+        const partialTextSearch = new PartialTextSearch(docList2, { docToString: ['name', 'age', 'city', 'surname'] })
+        expect(partialTextSearch.sa.string).to.eq('a|bc|d')
       })
     })
 
@@ -29,6 +44,14 @@ describe('PartialTextSearch', () => {
       const partialTextSearch = new PartialTextSearch(docList)
       it('automatically extracts strings from each document, and concatenates all strings', () => {
         expect(partialTextSearch.sa.string).to.eq('john|yamamoto|20chris|vilch|21nick|mariangel|22')
+      })
+
+      it('ignores keys that have null or undefined values', () => {
+        let partialTextSearch = new PartialTextSearch(docList2, { docToString: ['name', 'age', 'city', 'surname'] })
+        expect(partialTextSearch.sa.string).to.eq('a|bc|d')
+
+        partialTextSearch = new PartialTextSearch(docList2, { docToString: ['name', 'age', 'city'] })
+        expect(partialTextSearch.sa.string).to.eq('ac')
       })
     })
 

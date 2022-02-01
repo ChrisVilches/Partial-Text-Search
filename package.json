@@ -1,8 +1,14 @@
 {
   "name": "partial-text-search",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChrisVilches/Partial-Text-Search"
+  },
+  "url" : "https://github.com/ChrisVilches/Partial-Text-Search/issues",
+  "email" : "contact@chrisvilches.com",
   "scripts": {
     "test": "mocha --recursive --reporter progress",
     "format": "standard --fix"
