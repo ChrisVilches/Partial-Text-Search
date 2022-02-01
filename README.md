@@ -2,7 +2,7 @@
 
 A Javascript library that finds string patterns in a collection of documents. It efficiently finds matches even if the text of each document does not begin with the query pattern.
 
-The result of each query is a set containing the document IDs where the query pattern is contained.
+The result of each query is a set containing the document indices where the query pattern is contained.
 
 It uses the suffix array data structure to achieve high performance queries.
 
@@ -31,11 +31,13 @@ partialTextSearch.search('liv')
 npm install partial-text-search
 ```
 
-## Options
+## Advanced
 
 ### Ways to index each document
 
-By default this library will examine each document and extract (from the first level of nesting only) all strings and numbers (converted to strings) and index them.
+In order for the suffix array to work properly, it's necessary to reduce each document to a single string before indexing them.
+
+By default this library will examine each document and extract (from the first level of nesting only) all strings and numbers (converted to strings) and concatenate them to create a single string.
 
 ```javascript
 const doc = {
@@ -49,9 +51,9 @@ const doc = {
 
 In this example, the resulting string to be indexed for this document will be `hello world|document content`. Note that the `info` key was ignored.
 
-Plus, note that a separator `|` was added between the two fields, this is necessary for the suffix array to work properly. This is because a document must be reduced to a single string first.
+Plus, note that a separator `|` was added between the two fields. Read more about the [separator](#separator).
 
-The separator can be configured (see below), and it's recommended to use a character that won't appear in any query. It's not a requirement to use a separator, but not using it (or choosing it incorrectly) may lead to strings from two or more fields getting concatenated, resulting in a string that originally wasn't present in any single field of the document.
+There are more ways to convert documents to strings, which are described next.
 
 #### Index only certain strings from the document
 
@@ -61,9 +63,34 @@ Extract only certain keys from each document:
 partialTextSearch = new PartialTextSearch(docs, { docToString: ['summary', 'another_key'] })
 ```
 
-#### Configure a different separator
+#### Custom function to convert a document to a string
 
-Before indexing the document list, it's necessary to convert each document to a single string, where some or all fields are concatenated. In order to improve search accuracy, a separator can be added (by default a `|`) so that it's possible to clearly differentiate one document field from another. This avoids matching a substring that only exists because of the concatenation of two fields, but not in any individual field of the document. Note that not using a separator (or not configuring it properly) doesn't necessarily lead to severe harmful outcomes, but it's nevertheless recommended to configure it.
+You can fully customize the way a document is indexed by providing a function, for example:
+
+```javascript
+// myDocConversion :: Object -> String
+const myDocConversion = doc => (doc.age * 2) + '||' + R.reverse(doc.name) + '||' + doc.surname
+
+partialTextSearch = new PartialTextSearch(docs, { docToString: myDocConversion })
+```
+
+Note that you must manually add a separator between fields in case you need it, as the separator is only added automatically when extracting strings using keys, or when the default mechanism is used.
+
+### Separator
+
+Before indexing the document list, it's necessary to convert each document to a single string, where some or all fields are concatenated. In order to improve search accuracy, a separator can be added (by default a `|`) so that it's possible to clearly differentiate one document field from another. This avoids matching a substring that only exists because of the concatenation of two fields, but not in any individual field of the document. Take a look at the following example:
+
+```javascript
+const docList = [
+  { text: 'bana', about: 'na' }
+]
+```
+
+When indexing this document, the document needs to be reduced to a single string, and if the resulting string has no separators, then the query `banana` would match this document, even though the word was not present in any individual field.
+
+The workaround used by this library to avoid this problem is to insert a separator between document fields.
+
+Note that not using a separator (or not configuring it properly) doesn't necessarily lead to severe harmful outcomes, but it's nevertheless recommended to configure it.
 
 It's possible to configure a different separator for combining fields into a single string:
 
@@ -77,19 +104,34 @@ You can also combine this option with the `docToString` option:
 partialTextSearch = new PartialTextSearch(docs, { separator: '/', docToString: ['summary', 'another_key'] })
 ```
 
-What if the query patterns and/or the document strings contain the separator being used? The separator is only used as a way to improve accuracy, but it's not part of the actual text, therefore it shouldn't be used for matching any pattern. One way to deal with this problem is to remove the separator from both the document's text and from each query (before calling the search methods). This way, the separator character will only ever appear as a separator, and in no other context.
-
-#### Custom function to convert a document to a string
-
-You can fully customize the way a document is indexed by providing a function like so:
+What if the query patterns and/or the document strings contain the separator being used? The separator is only used as a way to improve accuracy, but it's not part of the actual text (since it's inserted by the library), therefore it shouldn't be used for pattern matching. One way to deal with this problem is to remove the separator from both the document's text and from each query (before calling the search methods). This way, the separator character will only ever appear as a separator, and in no other context:
 
 ```javascript
-const myDocConversion = doc => (doc.age * 2) + '||' + R.reverse(doc.name) + '||' + doc.surname
+let myQuery = 'I love the pipe | symbol'
 
-partialTextSearch = new PartialTextSearch(docs, { docToString: myDocConversion })
+myQuery = myQuery.replace(/\|/g, '') // Remove all | characters
+
+partialTextSearch.search(myQuery) // Assume documents were indexed using the | separator
 ```
 
-Note that you must manually add a separator between fields in case you need it, as the separator is only added automatically when extracting strings using keys, or when the default mechanism is used.
+### Case insensitive support
+
+Search is case sensitive by design, but there are a few ways to support case insensitive search. The recommended way is to:
+
+1. Convert the strings to index of all documents to lowercase.
+2. Lowercase the query before executing the search.
+
+```javascript
+const myDocConversion = doc => (doc.title + '|' + doc.text).toLowerCase()
+
+partialTextSearch = new PartialTextSearch(docs, { docToString: myDocConversion })
+
+const someQuery = 'I hAve mIXED cAsEs'
+
+partialTextSearch.search(someQuery.toLowerCase())
+```
+
+This trick can also be used to remove characters determined to be "useless" like dots, commas, extra whitespace, etc. Remember to apply the same pre-processing to both the documents and the query patterns, otherwise they would not match.
 
 ## Contribution
 

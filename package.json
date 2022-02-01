@@ -1,6 +1,6 @@
 {
   "name": "partial-text-search",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Javascript library that finds string patterns in a collection of documents. It efficiently finds matches even if the text of each document does not begin with the query pattern.",
   "main": "index.js",
   "repository": {
