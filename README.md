@@ -80,18 +80,18 @@ const doc = {
 }
 ```
 
-In this example, the resulting string to be indexed for this document will be `hello world|document content`. Note that the `info` key was ignored.
+In this example, the resulting string to be indexed for this document will be `hello world|document content`. Note that the `info` field was ignored.
 
 Plus, note that a separator `|` was added between the two fields. Read more about the [separator](#separator).
 
 There are more ways to convert documents to strings, which are described next.
 
-#### Index only certain strings from the document
+#### Index only certain fields from the document
 
-Extract only certain keys from each document:
+Extract only certain fields from each document:
 
 ```javascript
-partialTextSearch = new PartialTextSearch(docs, { docToString: ['summary', 'another_key'] })
+partialTextSearch = new PartialTextSearch(docs, { docToString: ['summary', 'anotherField'] })
 ```
 
 #### Custom function to convert a document to a string
@@ -105,7 +105,7 @@ const myDocConversion = doc => (doc.age * 2) + '||' + R.reverse(doc.name) + '||'
 partialTextSearch = new PartialTextSearch(docs, { docToString: myDocConversion })
 ```
 
-Note that you must manually add a separator between fields in case you need it, as the separator is only added automatically when extracting strings using keys, or when the default mechanism is used.
+In this case you must manually add a separator between fields in case you need it.
 
 ### Separator
 
