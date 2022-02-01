@@ -57,6 +57,7 @@ describe('PartialTextSearch', () => {
       expect(partialTextSearch.searchRanked('aaaaa')).to.eql({})
       expect(partialTextSearch.searchRanked('a')).to.eql(R.zipObj([0, 1, 2], [3, 3, 1]))
       expect(partialTextSearch.searchRanked('aa')).to.eql(R.zipObj([0, 1], [2, 1]))
+      expect(partialTextSearch.searchRanked('aaa')).to.eql(R.zipObj([0], [1]))
       expect(partialTextSearch.searchRanked('b')).to.eql(R.zipObj([1, 2], [1, 3]))
       expect(partialTextSearch.searchRanked('bb')).to.eql(R.zipObj([2], [2]))
       expect(partialTextSearch.searchRanked('bbb')).to.eql(R.zipObj([2], [1]))
