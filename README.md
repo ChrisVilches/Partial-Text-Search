@@ -33,6 +33,37 @@ npm install partial-text-search
 
 ## Advanced
 
+### .searchRanked method
+
+Instead of a document index set, you can get an object that maps each document to the amount of occurrences found.
+
+```javascript
+partialTextSearch.searchRanked('a')
+/*
+{
+  '0': 42,
+  '1': 311,
+  '2': 23
+}
+*/
+```
+
+### Limit the results
+
+Add the `limit` option to get fewer results:
+
+```javascript
+partialTextSearch.search('aaa')
+// Set { 0, 1, 2, 3, 4, 5 }
+
+partialTextSearch.search('aaa', { limit: 3 })
+// Set { 0, 1, 2 }
+```
+
+This option is only available for the `.search` method, and not for `.searchRanked`.
+
+The decision of which ones to return or omit is completely arbitrary.
+
 ### Ways to index each document
 
 In order for the suffix array to work properly, it's necessary to reduce each document to a single string before indexing them.
