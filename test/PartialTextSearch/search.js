@@ -28,6 +28,15 @@ describe('PartialTextSearch', () => {
       expect(partialTextSearch.search('a', { limit: 0 }).size).to.eq(0)
     })
 
+    it('the separator gets matched if not used properly', () => {
+      const partialTextSearch = new PartialTextSearch([{ text: 'abc', bio: 'def' }, { text: 'xy', bio: 'z' }])
+
+      expect(partialTextSearch.search('abc|def').size).to.eq(1)
+      expect(partialTextSearch.search('xy|z').size).to.eq(1)
+      expect(partialTextSearch.search('abcdef').size).to.eq(0)
+      expect(partialTextSearch.search('xyz').size).to.eq(0)
+    })
+
     it('supports case insensitive search using a workaround (query must also be lowercased manually)', () => {
       const textToLowerCase = R.compose(R.toLower, R.prop('text'))
       const partialTextSearch = new PartialTextSearch([{ text: 'cHRiS' }, { text: 'vIlCh' }, { text: 'heLLo' }], { docToString: textToLowerCase })
